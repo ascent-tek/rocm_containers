@@ -1,19 +1,19 @@
 # AMD Radeon RX7900XTX running DeepSpeed
 
-<img style="float: left;" src="rx7900xtx.jpg" width=50%><img style="float: right;" src="deepspeed.png" width=50%>
+<img style="float: left;" src="rx7900xtx.jpg" width=40%><img style="float: middle;" src="ascent.png" width=20%><img style="float: right;" src="deepspeed.png" width=33%>
 
 &nbsp;
 
-
-
-<font size="4">This guide walks through what was done to get the AMD Radeon RX7900XTX to run inference with offload support using DeepSpeed.</font>
+<font size="4">This guide walks through what was done to get the AMD Radeon RX7900XTX to run inference with cpu and NVMe offload support using DeepSpeed.</font>
 
 | [Introduction](#introduction) | [Hardware](#hardware-configuration) | [Software](#software-configuration) | [Running](#run-a-model-with-deepspeed) | [Conclusion](#conclusion) |
 ## Introduction
-Democratizing AI requires all GPU manufactures to be able to run open-source AI models.  AMD is expanding their focus toward AI enablement. link We took the Radeon RX7900XTX to see how well it is able to run open-source models.
+Democratizing AI requires all GPU manufactures to be able to run open-source AI models.  AMD is expanding their focus toward AI enablement. We took the Radeon RX7900XTX and took a stab at making it work with Microsoft's DeepSpeed.
 
 ## Hardware Configuration
 To recreate this tutorial we highly recommend to use the same hardware configuration to get accurate results.  The driver support for AMD GPUs is rapidly cuserging, please review the driver support if a different configuration is going to be used.
+
+We used an [Ascent-tek](http://www.ascent-tek.com) AI Workstation, made up with the following components:
 
 <b>Motherboard</b>: [SuperMicro M12SWA-TF](https://www.supermicro.com/en/products/motherboard/m12swa-tf)
 
@@ -34,6 +34,17 @@ sudo apt install dist-upgrade
 sudo reboot
 ```
 ### Option 1: Use our docker image
+Install the base docker image.  You'll need to already have docker installed and setup.
+```shell
+cd amd_rocmbase
+./buldImage.sh
+```
+Now build the deepspeed specific docker image.
+```shell
+cd amd_ds
+./buildImage.sh
+```
+To run deepspeed now, go ahead and jump to the [Run a model with DeepSpeed](#run-a-model-with-deepspeed) section
 
 ### Option 2: Install everything yourself
 Install ROCm5.6.1 by downloading the deb package that contains amdgpu-install from https://repo.radeon.com/amdgpu-install/5.6.1/ubuntu/jammy/
@@ -136,6 +147,12 @@ Before you run a model, but after ROCm is installed, you'll need to use rocm-smi
 rocm-smi --setperflevel high
 ```
 
+If you installed the docker image, you just need to use the <b>runDockerfile.sh</b> for amd_ds.  It will run the example steps listed out below.
+```shell
+cd amd_ds
+./runDockerfile.sh
+```
+
 To run DeepSpeed, we just grab the <b>DeepSpeedExamples</b> and <b>transformers-bloom-inference</b> repos for examples to run and compare (and install their dependencies).
 
 ```shell
@@ -162,12 +179,12 @@ deepspeed --num_gpus 1 transformers-bloom-inference/bloom-inference-scripts/bloo
 echo "CPU Offload Comparison (13b, cannot run without offload or quantization)"
 deepspeed --num_gpus 1 transformers-bloom-inference/bloom-inference-scripts/bloom-ds-zero-inference.py --cpu_offload --name "facebook/opt-13b" --benchmark
 
-echo "NVME offload requires directory to test, but the command is documented below"
+echo "NVME offload requires directory to use, make sure you make the folder on your nvme drive"
 mkdir nvmeoffload
-deepspeed --num_gpus 1 transformers-bloom-inference/bloom-inference-scripts/bloom-ds-zero-inference.py --nvme_offload_path ./nvmeoffload --name \"facebook/opt-13b\" --benchmark
+deepspeed --num_gpus 1 amd_ds/generic-ds-zero-inference.py --nvme_offload_path ./nvmeoffload --name \"facebook/opt-30b\" --benchmark --batch_size=20
 ```
 
 
 
 ## Conclusion
-With DeepSpeed you can mess around with much larger models than your GPU hardware naturally supports.  Also in our testing, the offload bottleneck dwarfs any hardware differences, making the AMD RX7900XTX perform pretty much just as well as a higher end Nvidia card.  
+With DeepSpeed you can mess around with much larger models than your GPU hardware naturally supports.  DeepSpeed was shown off running on AMD's Instinct GPU in 2022, and with a little work it isn't too hard to get it going on consumer available AMD GPUs.
