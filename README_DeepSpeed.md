@@ -37,7 +37,7 @@ sudo reboot
 Install the base docker image.  You'll need to already have docker installed and setup.
 ```shell
 cd amd_rocmbase
-./buldImage.sh
+./buildImage.sh
 ```
 Now build the deepspeed specific docker image.
 ```shell
