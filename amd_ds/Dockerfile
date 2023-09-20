@@ -33,7 +33,7 @@ RUN git clone https://github.com/microsoft/DeepSpeedExamples.git
 RUN git clone https://github.com/huggingface/transformers-bloom-inference.git
 
 RUN pip3 install transformers einops accelerate
-
+RUN mkdir -p /home/workspace/aioffloaddir
 COPY runDemonstration.sh /home/workspace
 
 ENTRYPOINT ["bash","/home/workspace/runDemonstration.sh"]
