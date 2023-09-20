@@ -17,6 +17,8 @@ To recreate this tutorial we highly recommend to use the same hardware configura
 
 <b>Motherboard</b>: [SuperMicro M12SWA-TF](https://www.supermicro.com/en/products/motherboard/m12swa-tf)
 
+<b>CPU</b>: AMD Ryzen Threadripper Pro 5955W
+
 <b>GPU</b>: Radeon RTX7900XTX
 
 <b>RAM</b>: 256 DDr4 Ecc RDimm

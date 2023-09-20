@@ -17,6 +17,8 @@ To recreate this tutorial we highly recommend to use the same hardware configura
 
 <b>Motherboard</b>: [SuperMicro M12SWA-TF](https://www.supermicro.com/en/products/motherboard/m12swa-tf)
 
+<b>CPU</b>: AMD Ryzen Threadripper Pro 5955W
+
 <b>GPU</b>: Radeon RTX7900XTX
 
 <b>RAM</b>: 256 DDr4 Ecc RDimm
@@ -102,7 +104,7 @@ git submodule update --init --recursive
 
 This is the quick hack to ROCm that resolves missing typedefs.
 ```shell
-sed -i '/#include <stdint.h>/a #include <rocblas/rocblas.h>' /opt/rocm/include/hipblas/hipblas.h
+sudo sed -i '/#include <stdint.h>/a #include <rocblas/rocblas.h>' /opt/rocm/include/hipblas/hipblas.h
 ```
 
 Here are the options and commands to build DeepSpeed.  A lot of the DeepSpeed Ops are disabled, we only enabled transformer inference.
@@ -162,7 +164,7 @@ deepspeed --num_gpus 1 transformers-bloom-inference/bloom-inference-scripts/bloo
 
 echo "NVME offload requires directory to test, but the command is documented below"
 mkdir nvmeoffload
-deepspeed --num_gpus 1 transformers-bloom-inference/bloom-inference-scripts/bloom-ds-zero-inference.py --nvme_offload_path ./nvmeoffload --name \"facebook/opt-13b\" --benchmark"
+deepspeed --num_gpus 1 transformers-bloom-inference/bloom-inference-scripts/bloom-ds-zero-inference.py --nvme_offload_path ./nvmeoffload --name \"facebook/opt-13b\" --benchmark
 ```
 
 
