@@ -1,3 +1,3 @@
 sudo rocm-smi --setperflevel high
 #docker run --rm --mount  src=/media/atek/T7/hfcache,target=/home/workspace/huggingface,type=bind --device /dev/kfd --device /dev/dri/renderD128 amdrocm_deepspeed_at:1
-docker run -it --rm --mount src=/mnt/fast/aioffload,target=/home/workspace/aioffloaddir --mount  src=/mnt/fast/hfcache,target=/home/workspace/huggingface,type=bind --device /dev/kfd --device /dev/dri/renderD128 amdrocm_deepspeed_at:1 /bin/bash
+docker run -it --rm --mount src=/mnt/fast/aioffload,target=/home/workspace/aioffloaddir,type=bind --mount  src=/mnt/fast/hfcache,target=/home/workspace/huggingface,type=bind --device /dev/kfd --device /dev/dri/renderD128 amdrocm_deepspeed_at:1 /bin/bash

@@ -34,6 +34,8 @@ RUN git clone https://github.com/huggingface/transformers-bloom-inference.git
 
 RUN pip3 install transformers einops accelerate
 RUN mkdir -p /home/workspace/aioffloaddir
+COPY generic-ds-zero-inference.py /home/workspace/transformers-bloom-inference/bloom-inference-scripts/generic-ds-zero-inference.py
+
 COPY runDemonstration.sh /home/workspace
 
 ENTRYPOINT ["bash","/home/workspace/runDemonstration.sh"]
